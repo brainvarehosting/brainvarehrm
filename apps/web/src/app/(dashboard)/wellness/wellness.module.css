@@ -1,0 +1,93 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+.card { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); animation: fadeInUp 0.4s ease; }
+.card[data-accent] { border-color: rgba(59,130,246,0.2); background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.04)); }
+.cardTitle { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+
+/* Dashboard Grid */
+.dashGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--space-5); }
+
+/* Mood Picker */
+.moodPicker { display: flex; gap: var(--space-3); justify-content: center; margin-bottom: var(--space-4); }
+.moodBtn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--space-3); border-radius: var(--radius-lg); background: var(--bg-tertiary); border: 2px solid transparent; cursor: pointer; transition: all var(--transition-fast); min-width: 70px; }
+.moodBtn:hover { border-color: var(--border-primary); transform: translateY(-2px); }
+.moodBtn[data-selected='true'] { border-color: var(--color-primary-400); background: rgba(59,130,246,0.08); box-shadow: 0 0 16px rgba(59,130,246,0.15); transform: translateY(-4px); }
+.moodEmoji { font-size: 2rem; }
+.moodLabel { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 500; }
+.moodSubmit { display: flex; gap: var(--space-2); }
+.moodInput { flex: 1; padding: 8px 14px; background: var(--bg-input); border: 1px solid var(--border-primary); border-radius: var(--radius-md); color: var(--text-primary); font-size: var(--text-sm); }
+.moodInput:focus { border-color: var(--border-focus); outline: none; }
+.submitMoodBtn { padding: 8px 20px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-md); font-size: var(--text-xs); font-weight: 600; white-space: nowrap; cursor: pointer; transition: all var(--transition-fast); }
+.submitMoodBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+
+/* Team Mood */
+.teamMood { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); }
+.teamMoodScore { display: flex; align-items: center; gap: var(--space-3); }
+.teamMoodVal { font-size: var(--text-4xl); font-weight: 800; color: var(--text-primary); }
+.teamMoodEmoji { font-size: 2.5rem; }
+.weekMoods { display: flex; gap: var(--space-3); }
+.weekDay { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.weekEmoji { font-size: 1.3rem; }
+.weekLabel { font-size: 10px; color: var(--text-tertiary); font-weight: 600; text-transform: uppercase; }
+
+/* Challenge Mini */
+.challengeMini { display: flex; flex-direction: column; gap: var(--space-3); }
+.challengeMiniItem { display: flex; align-items: center; gap: var(--space-3); }
+.challengeMiniItem span:first-child { font-size: 1.3rem; }
+.challengeMiniContent { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.challengeMiniName { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); }
+.challengeMiniProg { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 600; white-space: nowrap; }
+.progressTrack { height: 6px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden; flex: 1; }
+.progressFill { height: 100%; background: var(--color-primary-400); border-radius: var(--radius-full); transition: width 0.4s ease; }
+
+/* Tips */
+.tipList { display: flex; flex-direction: column; gap: var(--space-3); }
+.tipItem { display: flex; gap: var(--space-3); padding: var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); }
+.tipIcon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+.tipCat { font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+.tipText { font-size: var(--text-sm); color: var(--text-primary); line-height: 1.5; margin-top: 2px; }
+
+/* Challenge Grid */
+.challengeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+.challengeCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.challengeCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.challengeCard[data-joined='true'] { border-color: rgba(16,185,129,0.2); }
+.challengeHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+.challengeIcon { font-size: 2rem; }
+.challengeXp { font-size: var(--text-xs); font-weight: 600; color: var(--color-primary-400); padding: 3px 8px; background: rgba(59,130,246,0.1); border-radius: var(--radius-full); }
+.challengeTitle { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); }
+.challengeType { font-size: var(--text-xs); color: var(--text-tertiary); display: block; margin-top: 2px; }
+.challengeGoal { margin-top: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); }
+.challengeGoal strong { color: var(--text-primary); font-size: var(--text-md); }
+.challengeProgress { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-3) 0; }
+.challengeProgress span { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 600; }
+.challengeFooter { display: flex; justify-content: space-between; font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-3); }
+.joinBtn { width: 100%; padding: 10px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); }
+.joinBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+.joinedBtn { width: 100%; padding: 10px; background: rgba(16,185,129,0.1); color: var(--color-accent-400); border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+
+/* Mood Section */
+.moodSection { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-5); }
+.moodChart { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.moodBars { display: flex; gap: var(--space-3); align-items: flex-end; height: 200px; }
+.moodBarCol { flex: 1; display: flex; flex-direction: column; align-items: center; gap: var(--space-2); height: 100%; }
+.moodBarWrap { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; }
+.moodBarFill { width: 100%; background: linear-gradient(180deg, var(--color-primary-400), var(--color-accent-400)); border-radius: var(--radius-sm) var(--radius-sm) 0 0; display: flex; align-items: flex-start; justify-content: center; padding-top: 4px; min-height: 20px; transition: height 0.5s ease; }
+.moodBarFill span { font-size: 1.2rem; }
+.moodBarLabel { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 500; }
+.moodInsights { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.insightList { display: flex; flex-direction: column; gap: var(--space-3); }
+.insightItem { font-size: var(--text-sm); color: var(--text-secondary); padding: var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); line-height: 1.5; }
+.insightItem strong { color: var(--text-primary); }
+
+@media (max-width: 768px) {
+  .dashGrid { grid-template-columns: 1fr; }
+  .challengeGrid { grid-template-columns: 1fr; }
+  .moodSection { grid-template-columns: 1fr; }
+  .moodPicker { flex-wrap: wrap; }
+}

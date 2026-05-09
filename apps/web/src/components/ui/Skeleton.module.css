@@ -1,0 +1,32 @@
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-card-hover) 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.textGroup { display: flex; flex-direction: column; gap: 8px; }
+
+.card {
+  padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: var(--space-4);
+}
+
+.cardHeader { display: flex; align-items: center; gap: var(--space-3); }
+.cardMeta { display: flex; flex-direction: column; gap: 6px; }
+
+.table { display: flex; flex-direction: column; border: 1px solid var(--border-primary); border-radius: var(--radius-lg); overflow: hidden; }
+.tableHeader { display: flex; gap: var(--space-4); padding: var(--space-4); background: var(--bg-tertiary); }
+.tableRow { display: flex; gap: var(--space-4); padding: var(--space-4); border-top: 1px solid var(--border-secondary); animation: fadeIn 0.3s ease both; }
+
+.dashboard { display: flex; flex-direction: column; gap: var(--space-5); }
+.statsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-4); }
+.statCard { display: flex; gap: var(--space-4); padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.4s ease both; }
+.contentGrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+
+@media (max-width: 1024px) { .contentGrid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .statsGrid { grid-template-columns: 1fr; } }

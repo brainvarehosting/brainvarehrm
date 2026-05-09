@@ -1,0 +1,67 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.addBtn { display: flex; align-items: center; gap: var(--space-2); padding: 10px 20px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; transition: all var(--transition-fast); }
+.addBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
+.summaryRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-3); }
+.summaryItem { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); text-align: center; font-size: var(--text-xs); color: var(--text-secondary); }
+.summaryNum { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); overflow-x: auto; }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); transition: all var(--transition-fast); white-space: nowrap; cursor: pointer; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+.card { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-5); }
+.cardTitle { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+
+/* Jobs */
+.jobGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-4); }
+.jobCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.jobCard:hover { border-color: var(--border-focus); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.jobCard[data-closed='true'] { opacity: 0.6; }
+.jobTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+.jobPriority { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.5px; }
+.jobType { font-size: var(--text-xs); color: var(--text-tertiary); }
+.jobTitle { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2); }
+.jobMeta { display: flex; gap: var(--space-3); font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-4); }
+.jobStats { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); margin-bottom: var(--space-4); }
+.jobStats div { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.jobStats strong { font-size: var(--text-md); color: var(--text-primary); }
+.jobStats span { font-size: var(--text-xs); color: var(--text-tertiary); }
+.jobActions { display: flex; gap: var(--space-2); }
+.viewBtn { flex: 1; padding: 8px 14px; background: rgba(59,130,246,0.1); color: var(--color-primary-400); border-radius: var(--radius-md); font-size: var(--text-xs); font-weight: 600; transition: all var(--transition-fast); }
+.viewBtn:hover { background: rgba(59,130,246,0.2); }
+.shareBtn { padding: 8px 14px; background: var(--bg-tertiary); color: var(--text-secondary); border-radius: var(--radius-md); font-size: var(--text-xs); font-weight: 500; transition: all var(--transition-fast); }
+
+/* Kanban */
+.kanban { display: flex; gap: var(--space-3); overflow-x: auto; padding-bottom: var(--space-4); -webkit-overflow-scrolling: touch; }
+.kanbanCol { min-width: 220px; flex-shrink: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.kanbanHeader { display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); margin-bottom: var(--space-1); }
+.kanbanTitle { font-size: var(--text-xs); font-weight: 600; color: var(--text-primary); }
+.kanbanCount { font-size: 10px; font-weight: 700; background: var(--bg-elevated); color: var(--text-secondary); width: 22px; height: 22px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; }
+.kanbanCards { display: flex; flex-direction: column; gap: var(--space-2); min-height: 100px; }
+.candidateCard { padding: var(--space-3); background: var(--bg-card); border: 1px solid var(--border-secondary); border-radius: var(--radius-md); animation: fadeInUp 0.3s ease both; cursor: grab; transition: all var(--transition-fast); }
+.candidateCard:hover { border-color: var(--border-primary); box-shadow: var(--shadow-sm); }
+.candidateAvatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500)); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; margin-bottom: var(--space-2); }
+.candidateName { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); display: block; }
+.candidateRole { font-size: var(--text-xs); color: var(--text-tertiary); display: block; margin-top: 2px; }
+.candidateMeta { display: flex; gap: var(--space-2); font-size: 10px; color: var(--text-secondary); margin-top: var(--space-2); }
+.candidateSource { font-weight: 600; }
+
+/* Analytics */
+.analyticsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--space-4); }
+.funnel { display: flex; flex-direction: column; gap: var(--space-2); }
+.funnelRow { display: flex; align-items: center; gap: var(--space-3); animation: fadeInUp 0.3s ease both; }
+.funnelLabel { font-size: var(--text-xs); color: var(--text-secondary); min-width: 80px; }
+.funnelBar { flex: 1; height: 24px; background: var(--bg-tertiary); border-radius: var(--radius-sm); overflow: hidden; }
+.funnelFill { height: 100%; background: linear-gradient(90deg, var(--color-primary-500), var(--color-accent-500)); border-radius: var(--radius-sm); transition: width 0.6s ease; }
+.funnelCount { font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); min-width: 24px; text-align: right; }
+.sourceList { display: flex; flex-direction: column; gap: var(--space-3); }
+.sourceItem { display: flex; align-items: center; gap: var(--space-3); }
+.sourceDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.sourceName { flex: 1; font-size: var(--text-sm); color: var(--text-primary); }
+.sourceCount { font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+
+@media (max-width: 768px) {
+  .jobGrid { grid-template-columns: 1fr; }
+  .kanban { padding-bottom: var(--space-8); }
+}

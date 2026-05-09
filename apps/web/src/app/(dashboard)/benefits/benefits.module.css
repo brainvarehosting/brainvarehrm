@@ -1,0 +1,53 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.addBtn { padding: 10px 20px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); }
+.addBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+.statusBadge { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: var(--radius-full); text-transform: uppercase; }
+
+.planGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+.planCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.planCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.planIcon { font-size: 2rem; margin-bottom: var(--space-2); }
+.planCard h3 { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.planType { font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; }
+.planDetail { display: flex; justify-content: space-between; font-size: var(--text-xs); margin-top: var(--space-2); }
+.planDetail span { color: var(--text-tertiary); }
+.planDetail strong { color: var(--text-primary); }
+.enrollBar { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
+.enrollBar span { font-size: var(--text-xs); color: var(--text-secondary); font-weight: 600; white-space: nowrap; }
+.progressTrack { flex: 1; height: 4px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden; }
+.progressFill { height: 100%; background: var(--color-accent-400); border-radius: var(--radius-full); }
+.planActions { display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-3); }
+.enrollBtn { font-size: var(--text-xs); color: var(--color-primary-400); font-weight: 600; cursor: pointer; padding: 4px 12px; border-radius: var(--radius-full); background: rgba(59,130,246,0.08); }
+.enrollBtn:hover { background: rgba(59,130,246,0.15); }
+
+.enrollSection { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.enrollCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.enrollCard[data-accent] { border-color: rgba(59,130,246,0.2); background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.04)); }
+.enrollCard h2 { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+.enrollGrid { display: flex; flex-direction: column; gap: var(--space-3); }
+.enrollItem { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); }
+.enrollIcon { font-size: 1.5rem; }
+.enrollItem div { flex: 1; }
+.enrollItem strong { font-size: var(--text-sm); color: var(--text-primary); display: block; }
+.enrollItem span { font-size: var(--text-xs); color: var(--text-secondary); }
+.enrollCheck { font-size: 1.2rem; }
+.depList { display: flex; flex-direction: column; gap: var(--space-3); }
+.depItem { padding: var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); }
+.depItem strong { font-size: var(--text-sm); color: var(--text-primary); display: block; }
+.depItem span { font-size: var(--text-xs); color: var(--text-secondary); }
+.addDepBtn { font-size: var(--text-xs); color: var(--color-primary-400); font-weight: 600; cursor: pointer; padding: var(--space-2); }
+
+.claimList { display: flex; flex-direction: column; gap: var(--space-3); }
+.claimCard { padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.3s ease both; }
+.claimHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-2); }
+.claimHeader h4 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.claimHeader span { font-size: var(--text-xs); color: var(--text-tertiary); display: block; }
+.claimFooter { display: flex; gap: var(--space-4); font-size: var(--text-xs); color: var(--text-secondary); }
+
+@media (max-width: 768px) { .planGrid { grid-template-columns: 1fr; } .enrollSection { grid-template-columns: 1fr; } }

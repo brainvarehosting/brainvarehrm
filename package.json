@@ -1,0 +1,25 @@
+{
+  "name": "brainvare-hrm",
+  "packageManager": "pnpm@9.0.0",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BrainvareHRM — Full lifecycle people operations platform",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "db:migrate": "pnpm --filter @brainvare/api db:migrate",
+    "db:seed": "pnpm --filter @brainvare/api db:seed",
+    "db:studio": "pnpm --filter @brainvare/api db:studio",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.6"
+  }
+}

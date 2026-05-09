@@ -1,0 +1,171 @@
+.page { display: flex; flex-direction: column; gap: var(--space-5); animation: fadeIn 0.3s ease; }
+.pageHeader { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; letter-spacing: -0.02em; }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 2px; }
+
+.viewToggle { display: flex; border: 1px solid var(--border-primary); border-radius: var(--radius-md); overflow: hidden; }
+.viewBtn { padding: var(--space-2) var(--space-4); font-size: var(--text-sm); font-weight: 500; color: var(--text-tertiary); transition: all var(--transition-fast); }
+.viewBtn:hover { color: var(--text-primary); }
+.viewBtn[data-active='true'] { background: var(--color-primary-500); color: white; }
+
+/* Clock Card */
+.clockCard {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(139,92,246,0.06) 50%, rgba(16,185,129,0.04) 100%);
+  border: 1px solid var(--border-primary); border-radius: var(--radius-xl);
+  padding: var(--space-6); text-align: center;
+}
+.clockTime { font-size: 3rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.clockDate { font-size: var(--text-sm); color: var(--text-secondary); margin: var(--space-1) 0 var(--space-4); }
+.clockActions { display: flex; align-items: center; justify-content: center; gap: var(--space-4); flex-wrap: wrap; }
+
+.clockInBtn {
+  display: flex; align-items: center; gap: var(--space-2); height: 48px; padding: 0 var(--space-8);
+  background: linear-gradient(135deg, var(--color-accent-600), var(--color-accent-500)); color: white;
+  font-size: var(--text-md); font-weight: 600; border-radius: var(--radius-lg);
+  transition: all var(--transition-base); animation: pulse-glow 2s ease infinite;
+}
+.clockInBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,0.3); }
+
+.clockOutBtn {
+  display: flex; align-items: center; gap: var(--space-2); height: 48px; padding: 0 var(--space-8);
+  background: linear-gradient(135deg, var(--color-danger-600), var(--color-danger-500)); color: white;
+  font-size: var(--text-md); font-weight: 600; border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+.clockOutBtn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239,68,68,0.3); }
+
+.clockedInStatus { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-accent-400); font-weight: 500; flex-wrap: wrap; justify-content: center; }
+.pulseDot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent-400); animation: pulse-glow 2s ease infinite; }
+.geoTag { font-size: 11px; padding: 2px 8px; background: rgba(16,185,129,0.15); border-radius: var(--radius-full); color: var(--color-accent-400); margin-left: var(--space-1); }
+.locationChip { font-size: 11px; padding: 2px 8px; background: rgba(59,130,246,0.12); border-radius: var(--radius-full); color: var(--color-primary-400); margin-left: var(--space-1); }
+
+/* ═══════ Location Badge ═══════ */
+.locationBadge { margin: var(--space-4) auto; max-width: 480px; }
+
+.locating { display: flex; align-items: center; justify-content: center; gap: var(--space-2); padding: var(--space-3); font-size: var(--text-sm); color: var(--text-muted); }
+.locatingSpinner {
+  width: 16px; height: 16px; border: 2px solid var(--border-primary); border-top-color: var(--color-primary-500);
+  border-radius: var(--radius-full); animation: spin 0.8s linear infinite;
+}
+
+.locationInfo {
+  display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4);
+  background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg);
+  text-align: left;
+}
+.locationIcon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: rgba(59,130,246,0.1); color: var(--color-primary-400); flex-shrink: 0; }
+.locationDetails { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.locationName { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.locationAddress { font-size: var(--text-xs); color: var(--text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.locationDistance { font-size: 11px; color: var(--text-muted); }
+
+.refreshLocBtn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); color: var(--text-muted); transition: all var(--transition-fast); flex-shrink: 0; }
+.refreshLocBtn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+.locationDenied { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); border-radius: var(--radius-lg); font-size: var(--text-sm); color: var(--color-danger-400); }
+.retryBtn { padding: 4px 12px; font-size: var(--text-xs); font-weight: 600; color: var(--color-primary-400); background: rgba(59,130,246,0.1); border-radius: var(--radius-md); margin-left: auto; }
+
+/* ═══════ Punch Location Summary ═══════ */
+.punchSummary {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);
+  margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-secondary);
+  text-align: left;
+}
+.punchEntry { display: flex; flex-direction: column; gap: 2px; padding: var(--space-3); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-md); }
+.punchLabel { font-size: var(--text-xs); font-weight: 600; color: var(--text-secondary); }
+.punchLoc { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); }
+.punchCoords { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+.punchTime { font-size: var(--text-xs); color: var(--text-tertiary); }
+
+/* ═══════ Geofence Card ═══════ */
+.geofenceCard { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-5); }
+.geofenceTitle { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+.geofenceList { display: flex; flex-direction: column; gap: var(--space-3); }
+.geofenceItem { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); transition: background var(--transition-fast); }
+.geofenceItem:hover { background: var(--bg-tertiary); }
+.geofenceDot { width: 10px; height: 10px; border-radius: var(--radius-full); background: var(--text-muted); border: 2px solid var(--bg-secondary); flex-shrink: 0; }
+.geofenceDot[data-active='true'] { background: var(--color-accent-400); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
+.geofenceInfo { flex: 1; }
+.geofenceName { display: block; font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); }
+.geofenceCoords { display: block; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+.geofenceDistance { font-size: var(--text-xs); font-weight: 600; color: var(--text-muted); }
+.geofenceDistance[data-nearby='true'] { color: var(--color-accent-400); }
+
+/* Stats */
+.statsRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.statChip { text-align: center; padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); }
+.statNum { display: block; font-size: var(--text-2xl); font-weight: 700; }
+.statLabel { font-size: var(--text-xs); color: var(--text-muted); }
+.statChip[data-type='present'] .statNum { color: var(--color-accent-400); }
+.statChip[data-type='absent'] .statNum { color: var(--color-danger-400); }
+.statChip[data-type='onLeave'] .statNum { color: var(--color-primary-400); }
+.statChip[data-type='halfDay'] .statNum { color: var(--color-warning-400); }
+
+/* Calendar */
+.calendarCard { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); padding: var(--space-5); }
+.calendarHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+.calMonthYear { font-size: var(--text-lg); font-weight: 600; }
+.calNavBtn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); color: var(--text-secondary); transition: all var(--transition-fast); }
+.calNavBtn:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+
+.calendarGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.calDayHeader { text-align: center; font-size: var(--text-xs); font-weight: 600; color: var(--text-muted); padding: var(--space-2); text-transform: uppercase; }
+.calEmpty { aspect-ratio: 1; }
+
+.calDay {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: var(--radius-md); font-size: var(--text-sm); cursor: pointer;
+  border: 1px solid transparent; transition: all var(--transition-fast); position: relative; gap: 2px;
+}
+.calDay:hover { border-color: var(--border-glass); }
+.calDay[data-today='true'] { border-color: var(--color-primary-500); box-shadow: 0 0 0 1px var(--color-primary-500); }
+.calDay[data-weekend='true'] { opacity: 0.5; }
+.calDay[data-future='true'] { opacity: 0.3; cursor: default; }
+.calDay[data-selected='true'] { border-color: var(--color-primary-400); box-shadow: 0 0 0 2px var(--glow-primary); }
+
+.calDayNum { font-weight: 600; color: var(--text-primary); }
+.calDot { width: 5px; height: 5px; border-radius: 50%; }
+.calGeoIcon { position: absolute; top: 2px; right: 2px; font-size: 8px; line-height: 1; }
+
+.calendarLegend { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-secondary); }
+.legendItem { display: flex; align-items: center; gap: 6px; font-size: var(--text-xs); color: var(--text-tertiary); }
+.legendDot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* Day Detail */
+.dayDetail { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); padding: var(--space-5); animation: fadeInUp 0.2s ease; }
+.dayDetail h3 { font-size: var(--text-md); font-weight: 600; margin-bottom: var(--space-4); }
+.dayDetailGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+.dayDetailGrid div { display: flex; flex-direction: column; gap: 2px; }
+.dayDetailGrid label { font-size: var(--text-xs); color: var(--text-muted); text-transform: uppercase; }
+.dayDetailGrid span { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+
+/* Day Location Info */
+.dayLocationInfo {
+  display: flex; align-items: center; gap: var(--space-3);
+  margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-secondary);
+}
+.dayLocationIcon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); background: rgba(59,130,246,0.1); color: var(--color-primary-400); flex-shrink: 0; }
+.dayLocName { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.dayLocCoords { display: block; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* Team */
+.teamCard { background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); padding: var(--space-5); }
+.teamTitle { font-size: var(--text-md); font-weight: 600; margin-bottom: var(--space-5); }
+.teamGrid { display: flex; flex-direction: column; gap: var(--space-2); }
+.teamMember { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3); border-radius: var(--radius-md); transition: background var(--transition-fast); }
+.teamMember:hover { background: var(--bg-tertiary); }
+.teamAvatar { width: 36px; height: 36px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-500)); color: white; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.teamInfo { flex: 1; }
+.teamName { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.teamCode { font-size: var(--text-xs); color: var(--text-muted); font-family: var(--font-mono); }
+.teamStatus { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.statusPill { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: var(--radius-full); }
+.teamClockIn { font-size: var(--text-xs); color: var(--text-muted); }
+.teamLocation { font-size: 11px; color: var(--color-primary-400); }
+
+@media (max-width: 768px) {
+  .statsRow { grid-template-columns: repeat(2, 1fr); }
+  .dayDetailGrid { grid-template-columns: repeat(2, 1fr); }
+  .clockTime { font-size: 2rem; }
+  .punchSummary { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,57 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.addBtn { padding: 10px 20px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+.formGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--space-4); }
+.formCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.formCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.formHeader { display: flex; justify-content: space-between; margin-bottom: var(--space-2); }
+.formCat { font-size: 10px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; }
+.formStatus { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); text-transform: uppercase; }
+.formStatus[data-status='ACTIVE'] { background: rgba(16,185,129,0.12); color: var(--color-accent-400); }
+.formStatus[data-status='DRAFT'] { background: rgba(245,158,11,0.12); color: var(--color-warning-400); }
+.formCard h3 { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2); }
+.formStats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-2); text-align: center; }
+.formStats div { display: flex; flex-direction: column; gap: 1px; }
+.formStats strong { font-size: var(--text-sm); color: var(--text-primary); }
+.formStats span { font-size: 10px; color: var(--text-tertiary); }
+.formDate { font-size: 10px; color: var(--text-muted); display: block; margin-bottom: var(--space-2); }
+.editBtn { width: 100%; padding: 8px; background: rgba(59,130,246,0.08); color: var(--color-primary-400); border-radius: var(--radius-md); font-size: var(--text-xs); font-weight: 600; cursor: pointer; }
+
+.builderView { display: grid; grid-template-columns: 1fr 260px; gap: var(--space-5); }
+.builderCanvas { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.canvasTitle { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+.fieldList { display: flex; flex-direction: column; gap: var(--space-2); }
+.fieldItem { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: var(--bg-tertiary); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.3s ease both; transition: all var(--transition-fast); }
+.fieldItem:hover { border-color: var(--border-focus); }
+.fieldDrag { cursor: grab; color: var(--text-muted); font-size: 14px; flex-shrink: 0; }
+.fieldTypeIcon { font-size: 1.2rem; flex-shrink: 0; }
+.fieldDetails { flex: 1; }
+.fieldDetails strong { font-size: var(--text-sm); color: var(--text-primary); display: block; }
+.fieldDetails span { font-size: var(--text-xs); color: var(--text-tertiary); }
+.fieldEditBtn, .fieldDeleteBtn { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); cursor: pointer; font-size: 12px; transition: background var(--transition-fast); }
+.fieldEditBtn:hover { background: rgba(59,130,246,0.1); }
+.fieldDeleteBtn:hover { background: rgba(239,68,68,0.1); }
+.addFieldBtn { padding: var(--space-3); border: 2px dashed var(--border-primary); border-radius: var(--radius-lg); color: var(--text-tertiary); font-size: var(--text-sm); cursor: pointer; text-align: center; }
+
+.builderPanel { padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.builderPanel h4 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-3); }
+.typeList { display: flex; flex-direction: column; gap: var(--space-2); }
+.typeItem { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); border: 1px solid var(--border-secondary); border-radius: var(--radius-md); cursor: grab; transition: all var(--transition-fast); }
+.typeItem:hover { border-color: var(--border-focus); transform: translateX(3px); }
+.typeItem strong { font-size: var(--text-xs); color: var(--text-primary); display: block; }
+.typeItem span:last-child { font-size: 10px; color: var(--text-tertiary); }
+
+.fieldTypeGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-3); }
+.fieldTypeCard { padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); text-align: center; animation: fadeInUp 0.3s ease both; transition: all var(--transition-fast); }
+.fieldTypeCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.ftIcon { font-size: 2rem; display: block; margin-bottom: var(--space-2); }
+.fieldTypeCard h3 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.fieldTypeCard p { font-size: var(--text-xs); color: var(--text-secondary); }
+
+@media (max-width: 768px) { .builderView { grid-template-columns: 1fr; } .formGrid { grid-template-columns: 1fr; } .fieldTypeGrid { grid-template-columns: repeat(2, 1fr); } }

@@ -1,0 +1,41 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.summaryRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-3); }
+.summaryItem { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: var(--space-3); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); text-align: center; font-size: var(--text-xs); color: var(--text-secondary); }
+.summaryVal { font-size: var(--text-xl); font-weight: 700; }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+.alumniList { display: flex; flex-direction: column; gap: var(--space-3); }
+.alumniCard { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.3s ease both; transition: all var(--transition-fast); flex-wrap: wrap; }
+.alumniCard:hover { border-color: var(--border-focus); }
+.alumniAvatar { width: 44px; height: 44px; border-radius: var(--radius-full); background: linear-gradient(135deg, #64748b, #475569); display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-weight: 700; color: #fff; flex-shrink: 0; }
+.alumniInfo { flex: 1; min-width: 200px; }
+.alumniInfo h3 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.alumniInfo > span { font-size: var(--text-xs); color: var(--text-secondary); display: block; }
+.alumniMeta { display: flex; flex-wrap: wrap; gap: var(--space-3); font-size: var(--text-xs); color: var(--text-tertiary); margin-top: 4px; }
+.alumniRight { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.rehireBadge { font-size: 10px; font-weight: 600; padding: 3px 10px; background: rgba(16,185,129,0.1); color: var(--color-accent-400); border-radius: var(--radius-full); }
+.noRehire { font-size: 10px; font-weight: 600; padding: 3px 10px; background: rgba(100,116,139,0.1); color: var(--text-tertiary); border-radius: var(--radius-full); }
+.lastActive { font-size: 10px; color: var(--text-muted); }
+
+.portalGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-4); }
+.portalCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.portalCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.portalIcon { font-size: 2rem; display: block; margin-bottom: var(--space-2); }
+.portalCard h3 { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.portalCard p { font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-3); }
+.portalBtn { font-size: var(--text-xs); color: var(--color-primary-400); font-weight: 600; cursor: pointer; padding: 6px 14px; border-radius: var(--radius-full); background: rgba(59,130,246,0.08); }
+
+.rehireList { display: flex; flex-direction: column; gap: var(--space-3); }
+.rehireCard { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.3s ease both; flex-wrap: wrap; }
+.rehireInfo { flex: 1; min-width: 200px; }
+.rehireInfo h3 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.rehireInfo span { font-size: var(--text-xs); color: var(--text-secondary); display: block; }
+.rehireMeta { color: var(--text-tertiary) !important; margin-top: 2px; }
+.inviteBtn { padding: 8px 16px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-xs); font-weight: 600; cursor: pointer; white-space: nowrap; }
+
+@media (max-width: 768px) { .portalGrid { grid-template-columns: 1fr; } }

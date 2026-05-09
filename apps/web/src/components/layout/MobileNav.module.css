@@ -1,0 +1,73 @@
+.mobileNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-primary);
+  z-index: 9990;
+  padding: 0 8px;
+  padding-bottom: env(safe-area-inset-bottom);
+  align-items: center;
+  justify-content: space-around;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@media (max-width: 768px) {
+  .mobileNav { display: flex; }
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex: 1;
+  padding: 6px 0;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navIcon {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+.navItem[data-active='true'] .navIcon {
+  transform: scale(1.15);
+}
+
+.navLabel {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+}
+
+.navItem[data-active='true'] .navLabel {
+  color: var(--color-primary-400);
+  font-weight: 600;
+}
+
+.activeDot {
+  position: absolute;
+  top: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary-400);
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+}
+
+/* Push main content up on mobile to not overlap nav */
+@media (max-width: 768px) {
+  :global(main) {
+    padding-bottom: 80px !important;
+  }
+}

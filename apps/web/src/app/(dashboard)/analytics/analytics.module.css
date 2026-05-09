@@ -1,0 +1,89 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); }
+.pageHeader { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); }
+.pageTitle { font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); }
+.pageSubtitle { font-size: var(--text-sm); color: var(--text-secondary); margin-top: 4px; }
+.exportBtn { padding: 8px 16px; background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); font-size: var(--text-xs); font-weight: 600; color: var(--text-secondary); cursor: pointer; }
+.tabs { display: flex; gap: var(--space-1); background: var(--bg-tertiary); padding: 4px; border-radius: var(--radius-lg); }
+.tab { padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); white-space: nowrap; }
+.tab[data-active='true'] { background: var(--bg-elevated); color: var(--text-primary); box-shadow: var(--shadow-sm); }
+
+.kpiGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); }
+.kpiCard { padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); text-align: center; animation: fadeInUp 0.3s ease both; transition: all var(--transition-fast); }
+.kpiCard:hover { border-color: var(--border-focus); transform: translateY(-2px); }
+.kpiLabel { font-size: var(--text-xs); color: var(--text-tertiary); display: block; margin-bottom: 4px; }
+.kpiValue { font-size: var(--text-2xl); font-weight: 700; display: block; }
+.kpiChange { font-size: var(--text-xs); font-weight: 600; }
+.kpiChange[data-trend='up'] { color: var(--color-accent-400); }
+.kpiChange[data-trend='down'] { color: var(--color-accent-400); }
+
+.chartRow { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.chartCard { padding: var(--space-5); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-xl); }
+.chartCard[data-full] { grid-column: 1 / -1; }
+.chartCard h3 { font-size: var(--text-base); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-4); }
+
+.lineChart { display: flex; align-items: flex-end; gap: var(--space-3); height: 160px; }
+.chartCol { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; animation: fadeInUp 0.4s ease both; }
+.chartBar { width: 100%; max-width: 48px; background: linear-gradient(180deg, var(--color-primary-400), #8b5cf6); border-radius: var(--radius-md) var(--radius-md) 0 0; position: relative; min-height: 8px; transition: height 0.6s ease; }
+.chartBar span { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; color: var(--text-primary); }
+.chartLabel { font-size: var(--text-xs); color: var(--text-secondary); margin-top: var(--space-2); font-weight: 600; }
+
+.hiresExits { display: flex; flex-direction: column; gap: var(--space-2); }
+.heRow { display: flex; align-items: center; gap: var(--space-2); animation: fadeInUp 0.25s ease both; }
+.heMonth { font-size: var(--text-xs); color: var(--text-secondary); width: 32px; font-weight: 600; }
+.heBar { display: flex; flex: 1; height: 20px; gap: 2px; }
+.hireBar { background: rgba(16,185,129,0.3); border-radius: var(--radius-sm); font-size: 10px; font-weight: 600; color: var(--color-accent-400); display: flex; align-items: center; justify-content: center; min-width: 0; }
+.exitBar { background: rgba(239,68,68,0.2); border-radius: var(--radius-sm); font-size: 10px; font-weight: 600; color: var(--color-danger-400); display: flex; align-items: center; justify-content: center; min-width: 0; }
+
+.workforceGrid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-5); }
+.deptList { display: flex; flex-direction: column; gap: var(--space-3); }
+.deptRow { display: flex; align-items: center; gap: var(--space-2); animation: fadeInUp 0.25s ease both; }
+.deptName { font-size: var(--text-xs); color: var(--text-secondary); width: 90px; flex-shrink: 0; }
+.deptBar { flex: 1; height: 12px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden; }
+.deptFill { height: 100%; background: linear-gradient(90deg, var(--color-primary-400), #8b5cf6); border-radius: var(--radius-full); }
+.deptCount { font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); width: 24px; text-align: right; }
+.deptPct { font-size: 10px; color: var(--text-tertiary); width: 30px; text-align: right; }
+
+.diversityGrid { display: flex; flex-direction: column; gap: var(--space-4); }
+.diversityItem h4 { font-size: var(--text-xs); color: var(--text-secondary); margin-bottom: var(--space-2); }
+.genderBar, .ageBar { display: flex; height: 24px; border-radius: var(--radius-full); overflow: hidden; }
+.maleBar { background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
+.femaleBar { background: #ec4899; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
+.ageBar div { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; }
+
+.attendGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-3); }
+.attendItem { padding: var(--space-3); background: var(--bg-tertiary); border-radius: var(--radius-md); text-align: center; }
+.attendVal { font-size: var(--text-lg); font-weight: 700; display: block; }
+.attendItem span:last-child { font-size: var(--text-xs); color: var(--text-secondary); }
+
+.payrollGrid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: var(--space-5); }
+.payrollList { display: flex; flex-direction: column; gap: var(--space-2); }
+.payrollRow { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); animation: fadeInUp 0.25s ease both; }
+.payrollRow > span:first-child { width: 130px; color: var(--text-secondary); flex-shrink: 0; font-size: var(--text-xs); }
+.payrollBar { flex: 1; height: 8px; background: var(--bg-tertiary); border-radius: var(--radius-full); overflow: hidden; }
+.payrollFill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: var(--radius-full); }
+.payrollAmt { font-size: var(--text-xs); font-weight: 600; color: var(--text-primary); width: 50px; text-align: right; }
+.payrollPct { font-size: 10px; color: var(--text-tertiary); width: 30px; text-align: right; }
+.payrollTotal { display: flex; justify-content: space-between; padding: var(--space-3) 0; font-weight: 700; font-size: var(--text-sm); color: var(--text-primary); border-top: 2px solid var(--border-primary); margin-top: var(--space-2); }
+.complianceList { display: flex; flex-direction: column; gap: var(--space-3); }
+.compRow { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--border-secondary); }
+.compLabel { flex: 1; font-size: var(--text-sm); color: var(--text-secondary); }
+.compAmt { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+
+.aiSection { display: flex; flex-direction: column; gap: var(--space-5); }
+.aiHeader { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4); background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(139,92,246,0.06)); border: 1px solid rgba(59,130,246,0.12); border-radius: var(--radius-xl); }
+.aiGlow { font-size: 2rem; }
+.aiHeader h3 { font-size: var(--text-md); font-weight: 600; color: var(--text-primary); }
+.aiHeader p { font-size: var(--text-xs); color: var(--text-secondary); }
+.insightList { display: flex; flex-direction: column; gap: var(--space-3); }
+.insightCard { display: flex; gap: var(--space-3); padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-primary); border-radius: var(--radius-lg); animation: fadeInUp 0.35s ease both; transition: all var(--transition-fast); }
+.insightCard:hover { border-color: var(--border-focus); }
+.insightCard[data-type='warning'] { border-left: 3px solid var(--color-warning-400); }
+.insightCard[data-type='positive'] { border-left: 3px solid var(--color-accent-400); }
+.insightCard[data-type='insight'] { border-left: 3px solid var(--color-primary-400); }
+.insightCard[data-type='forecast'] { border-left: 3px solid #a78bfa; }
+.insightIcon { font-size: 1.5rem; flex-shrink: 0; padding-top: 2px; }
+.insightCard h4 { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.insightCard p { font-size: var(--text-xs); color: var(--text-secondary); line-height: 1.5; }
+.refreshBtn { align-self: flex-start; padding: 10px 20px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; border-radius: var(--radius-lg); font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+
+@media (max-width: 768px) { .chartRow, .workforceGrid, .payrollGrid { grid-template-columns: 1fr; } .kpiGrid { grid-template-columns: repeat(2, 1fr); } }
