@@ -1,6 +1,20 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const employeeId = searchParams.get('employeeId');
+    const addresses = await prisma.employeeAddress.findMany({
+      where: employeeId ? { employeeId } : undefined,
+      orderBy: { type: 'asc' },
+    });
+    return NextResponse.json({ data: addresses });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();

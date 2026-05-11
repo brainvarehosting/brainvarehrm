@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import crypto from 'crypto';
+import { createToken, REFRESH_TTL } from '@/lib/jwt';
 
 function hashPassword(password: string) {
   return crypto.createHash('sha256').update(password).digest('hex');
@@ -31,42 +32,44 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    const passwordHash = hashPassword(password);
-    if (user.passwordHash !== passwordHash) {
+    if (user.passwordHash !== hashPassword(password)) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // Update last login
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { lastLoginAt: new Date() },
-    });
+    prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } }).catch(() => {});
 
-    // Create a simple token (in production use JWT)
-    const token = crypto.randomBytes(32).toString('hex');
-
-    const userData = {
-      id: user.id,
+    const tokenPayload = {
+      sub: user.id,
       email: user.email,
       role: user.role,
       isSuperAdmin: user.isSuperAdmin,
       employeeId: user.employeeId,
       organizationId: user.employee?.organization?.id,
-      employee: user.employee ? {
-        id: user.employee.id,
-        firstName: user.employee.firstName,
-        lastName: user.employee.lastName,
-        employeeCode: user.employee.employeeCode,
-        profilePhoto: user.employee.profilePhoto,
-        department: user.employee.department?.name,
-        designation: user.employee.designation?.title,
-      } : null,
     };
 
+    const accessToken = createToken(tokenPayload);
+    const refreshToken = createToken({ sub: user.id, type: 'refresh' }, REFRESH_TTL);
+
     return NextResponse.json({
-      accessToken: token,
-      refreshToken: token,
-      user: userData,
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        isSuperAdmin: user.isSuperAdmin,
+        employeeId: user.employeeId,
+        organizationId: user.employee?.organization?.id,
+        employee: user.employee ? {
+          id: user.employee.id,
+          firstName: user.employee.firstName,
+          lastName: user.employee.lastName,
+          employeeCode: user.employee.employeeCode,
+          profilePhoto: user.employee.profilePhoto,
+          department: user.employee.department?.name,
+          designation: user.employee.designation?.title,
+        } : null,
+      },
     });
   } catch (error: any) {
     console.error('Auth error:', error);

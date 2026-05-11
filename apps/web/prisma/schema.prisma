@@ -35,6 +35,8 @@ model Organization {
   letterTemplates LetterTemplate[]
   payrollRuns  PayrollRun[]
   holidays     Holiday[]
+  positions    Position[]
+  benefits     Benefit[]
 }
 
 model Department {
@@ -475,6 +477,52 @@ model Policy {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdBy      String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+// ─────────────────────────────────────
+// Positions (Open Headcount)
+// ─────────────────────────────────────
+
+model Position {
+  id             String       @id @default(cuid())
+  title          String
+  departmentName String?
+  locationName   String?
+  gradeName      String?
+  jobType        String       @default("FULL_TIME") // FULL_TIME, PART_TIME, CONTRACT, INTERN
+  workMode       String       @default("OFFICE")    // OFFICE, REMOTE, HYBRID
+  headcount      Int          @default(1)
+  filledCount    Int          @default(0)
+  status         String       @default("OPEN")      // OPEN, FILLED, ON_HOLD, CLOSED
+  budgetMin      Float?
+  budgetMax      Float?
+  currency       String       @default("INR")
+  description    String?
+  requirements   String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+// ─────────────────────────────────────
+// Benefits
+// ─────────────────────────────────────
+
+model Benefit {
+  id             String       @id @default(cuid())
+  name           String
+  provider       String?
+  type           String       @default("GROUP_MEDICAL") // GROUP_MEDICAL, LIFE, DENTAL, WELLNESS, OTHER
+  coverage       Float?
+  enrolled       Int          @default(0)
+  premium        Float?
+  status         String       @default("ACTIVE")        // ACTIVE, INACTIVE, PENDING_RENEWAL
+  renewalDate    DateTime?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 }

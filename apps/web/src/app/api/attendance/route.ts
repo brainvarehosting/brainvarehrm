@@ -52,10 +52,24 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    const record = await prisma.attendanceRecord.create({
-      data: {
+    const recordDate = new Date(data.date || new Date());
+    const dayStart = new Date(recordDate.getFullYear(), recordDate.getMonth(), recordDate.getDate());
+
+    const record = await prisma.attendanceRecord.upsert({
+      where: {
+        employeeId_date: {
+          employeeId: data.employeeId,
+          date: dayStart,
+        },
+      },
+      update: {
+        clockOut: data.clockOut ? new Date(data.clockOut) : undefined,
+        status: data.status || 'PRESENT',
+        remarks: data.remarks,
+      },
+      create: {
         employeeId: data.employeeId,
-        date: new Date(data.date || new Date()),
+        date: dayStart,
         clockIn: data.clockIn ? new Date(data.clockIn) : new Date(),
         status: data.status || 'PRESENT',
         source: data.source || 'WEB',
