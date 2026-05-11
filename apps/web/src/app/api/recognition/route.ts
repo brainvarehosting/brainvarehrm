@@ -1,9 +1,56 @@
 import { NextResponse } from 'next/server';
-const recognition = [
-  { id: '1', from: 'Arjun Nair', to: 'Sneha Reddy', badge: '🌟 Star Performer', message: 'Outstanding work on the HRM v2 frontend architecture!', category: 'Excellence', createdAt: '2026-04-18', likes: 12 },
-  { id: '2', from: 'Priya Patel', to: 'Amit Kumar', badge: '🤝 Team Player', message: 'Thanks for helping the QA team with test automation!', category: 'Collaboration', createdAt: '2026-04-16', likes: 8 },
-  { id: '3', from: 'Sneha Reddy', to: 'Rohit Mehta', badge: '🚀 Go-Getter', message: 'Fixed the production bug within 30 minutes on a Saturday!', category: 'Initiative', createdAt: '2026-04-14', likes: 15 },
-  { id: '4', from: 'Amit Kumar', to: 'Priya Patel', badge: '💡 Innovator', message: 'Great idea on the geofenced attendance feature!', category: 'Innovation', createdAt: '2026-04-12', likes: 6 },
-];
-export async function GET() { return NextResponse.json({ data: recognition, total: recognition.length }); }
-export async function POST(request: Request) { try { const body = await request.json(); const r = { id: String(recognition.length + 1), ...body, likes: 0, createdAt: new Date().toISOString().split('T')[0] }; recognition.push(r); return NextResponse.json(r, { status: 201 }); } catch { return NextResponse.json({ error: 'Failed' }, { status: 500 }); } }
+import prisma from '@/lib/prisma';
+import { getOrgId } from '@/lib/org';
+
+export async function GET() {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ data: [], total: 0 });
+    const records = await prisma.recognition.findMany({
+      where: { organizationId: orgId },
+      include: {
+        fromEmployee: { select: { firstName: true, lastName: true, employeeCode: true } },
+        toEmployee: { select: { firstName: true, lastName: true, employeeCode: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+    });
+    return NextResponse.json({ data: records, total: records.length });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ error: 'No organization' }, { status: 400 });
+    const body = await request.json();
+    const record = await prisma.recognition.create({
+      data: {
+        organizationId: orgId, fromEmployeeId: body.fromEmployeeId,
+        toEmployeeId: body.toEmployeeId, badge: body.badge,
+        message: body.message, category: body.category || 'Excellence',
+      },
+      include: {
+        fromEmployee: { select: { firstName: true, lastName: true, employeeCode: true } },
+        toEmployee: { select: { firstName: true, lastName: true, employeeCode: true } },
+      },
+    });
+    return NextResponse.json(record, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const record = await prisma.recognition.update({
+      where: { id: body.id }, data: { likes: { increment: 1 } },
+    });
+    return NextResponse.json(record);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

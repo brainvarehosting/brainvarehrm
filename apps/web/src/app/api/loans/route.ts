@@ -1,7 +1,61 @@
 import { NextResponse } from 'next/server';
-const loans = [
-  { id: '1', employee: 'Priya Patel', code: 'EMP-0004', type: 'Salary Advance', amount: 50000, disbursed: 50000, repaid: 30000, outstanding: 20000, emi: 10000, status: 'ACTIVE', startDate: '2026-01-15', tenure: 5 },
-  { id: '2', employee: 'Amit Kumar', code: 'EMP-0003', type: 'Emergency Loan', amount: 100000, disbursed: 100000, repaid: 100000, outstanding: 0, emi: 0, status: 'CLOSED', startDate: '2025-06-01', tenure: 10 },
-];
-export async function GET() { return NextResponse.json({ data: loans, total: loans.length, activeLoans: loans.filter(l => l.status === 'ACTIVE').length, totalOutstanding: loans.reduce((s, l) => s + l.outstanding, 0) }); }
-export async function POST(request: Request) { try { const body = await request.json(); const l = { id: String(loans.length + 1), ...body, repaid: 0, outstanding: body.amount, status: 'PENDING' }; loans.push(l); return NextResponse.json(l, { status: 201 }); } catch { return NextResponse.json({ error: 'Failed' }, { status: 500 }); } }
+import prisma from '@/lib/prisma';
+import { getOrgId } from '@/lib/org';
+
+export async function GET() {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ data: [], total: 0, activeLoans: 0, totalOutstanding: 0 });
+    const loans = await prisma.loan.findMany({
+      where: { organizationId: orgId },
+      include: { employee: { select: { firstName: true, lastName: true, employeeCode: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+    return NextResponse.json({
+      data: loans, total: loans.length,
+      activeLoans: loans.filter(l => l.status === 'ACTIVE').length,
+      totalOutstanding: loans.reduce((s, l) => s + l.outstanding, 0),
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ error: 'No organization' }, { status: 400 });
+    const body = await request.json();
+    const amount = parseFloat(body.amount) || 0;
+    const loan = await prisma.loan.create({
+      data: {
+        organizationId: orgId, employeeId: body.employeeId,
+        type: body.type || 'SALARY_ADVANCE', amount, disbursed: 0, repaid: 0, outstanding: amount,
+        emi: body.emi ? parseFloat(body.emi) : 0, tenure: parseInt(body.tenure) || 1,
+        reason: body.reason || null, status: 'PENDING',
+      },
+      include: { employee: { select: { firstName: true, lastName: true, employeeCode: true } } },
+    });
+    return NextResponse.json(loan, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const loan = await prisma.loan.update({
+      where: { id: body.id },
+      data: {
+        status: body.status, approvedBy: body.approvedBy || null,
+        disbursed: body.disbursed !== undefined ? parseFloat(body.disbursed) : undefined,
+        disbursedAt: body.status === 'ACTIVE' ? new Date() : undefined,
+      },
+      include: { employee: { select: { firstName: true, lastName: true, employeeCode: true } } },
+    });
+    return NextResponse.json(loan);
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}

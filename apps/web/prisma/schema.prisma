@@ -24,19 +24,32 @@ model Organization {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  departments  Department[]
-  locations    Location[]
-  designations Designation[]
-  grades       Grade[]
-  employees    Employee[]
-  leaveTypes   LeaveType[]
-  shifts       Shift[]
-  policies     Policy[]
+  departments     Department[]
+  locations       Location[]
+  designations    Designation[]
+  grades          Grade[]
+  employees       Employee[]
+  leaveTypes      LeaveType[]
+  shifts          Shift[]
+  policies        Policy[]
   letterTemplates LetterTemplate[]
-  payrollRuns  PayrollRun[]
-  holidays     Holiday[]
-  positions    Position[]
-  benefits     Benefit[]
+  payrollRuns     PayrollRun[]
+  holidays        Holiday[]
+  positions       Position[]
+  benefits        Benefit[]
+  loans           Loan[]
+  recognitions    Recognition[]
+  assets          Asset[]
+  overtimeEntries OvertimeEntry[]
+  helpdeskTickets HelpdeskTicket[]
+  travelRequests  TravelRequest[]
+  wellnessPrograms WellnessProgram[]
+  socialPosts     SocialPost[]
+  surveys         Survey[]
+  expenses        Expense[]
+  announcements   Announcement[]
+  badgeTypes      BadgeType[]
+  employeeLevels  EmployeeLevel[]
 }
 
 model Department {
@@ -179,6 +192,18 @@ model Employee {
   onboardingTasks    OnboardingTask[]
   exitCase           ExitCase?
   user               User?
+  loans              Loan[]
+  recognitionsGiven  Recognition[]      @relation("RecognitionFrom")
+  recognitionsReceived Recognition[]   @relation("RecognitionTo")
+  assetsAssigned     Asset[]
+  overtimeEntries    OvertimeEntry[]
+  helpdeskTickets    HelpdeskTicket[]   @relation("TicketRaisedBy")
+  travelRequests     TravelRequest[]
+  socialPosts        SocialPost[]
+  expenses           Expense[]
+  badgeAwards        BadgeAward[]
+  xpTransactions     XpTransaction[]
+  employeeLevel      EmployeeLevel?
 }
 
 model EmployeeAddress {
@@ -559,4 +584,301 @@ model AuditLog {
   details   String?
   ipAddress String?
   createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────
+// Loans & Advances
+// ─────────────────────────────────────
+
+model Loan {
+  id             String       @id @default(cuid())
+  employeeId     String
+  employee       Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           String       @default("SALARY_ADVANCE") // SALARY_ADVANCE, EMERGENCY, PERSONAL, HOME, VEHICLE
+  amount         Float
+  disbursed      Float        @default(0)
+  repaid         Float        @default(0)
+  outstanding    Float        @default(0)
+  emi            Float        @default(0)
+  tenure         Int          @default(1) // months
+  status         String       @default("PENDING") // PENDING, APPROVED, ACTIVE, CLOSED, REJECTED
+  reason         String?
+  approvedBy     String?
+  disbursedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  repayments     LoanRepayment[]
+}
+
+model LoanRepayment {
+  id        String   @id @default(cuid())
+  loanId    String
+  loan      Loan     @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  amount    Float
+  month     Int
+  year      Int
+  paidAt    DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
+// ─────────────────────────────────────
+// Recognition & Awards
+// ─────────────────────────────────────
+
+model Recognition {
+  id             String       @id @default(cuid())
+  fromEmployeeId String
+  fromEmployee   Employee     @relation("RecognitionFrom", fields: [fromEmployeeId], references: [id], onDelete: Cascade)
+  toEmployeeId   String
+  toEmployee     Employee     @relation("RecognitionTo", fields: [toEmployeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  badge          String
+  message        String
+  category       String       @default("Excellence") // Excellence, Innovation, Collaboration, Leadership, Initiative
+  likes          Int          @default(0)
+  createdAt      DateTime     @default(now())
+}
+
+// ─────────────────────────────────────
+// Assets
+// ─────────────────────────────────────
+
+model Asset {
+  id             String    @id @default(cuid())
+  name           String
+  category       String    // Laptop, Monitor, Mobile, Accessory, Furniture, Other
+  serialNo       String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  assignedToId   String?
+  assignedTo     Employee? @relation(fields: [assignedToId], references: [id])
+  status         String    @default("AVAILABLE") // AVAILABLE, ASSIGNED, MAINTENANCE, RETIRED
+  purchaseDate   DateTime?
+  warrantyEnd    DateTime?
+  value          Float?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Overtime
+// ─────────────────────────────────────
+
+model OvertimeEntry {
+  id             String    @id @default(cuid())
+  employeeId     String
+  employee       Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  date           DateTime
+  hours          Float
+  rate           Float     @default(0)
+  amount         Float     @default(0)
+  reason         String?
+  status         String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy     String?
+  approvedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Helpdesk
+// ─────────────────────────────────────
+
+model HelpdeskTicket {
+  id             String    @id @default(cuid())
+  title          String
+  description    String?
+  category       String    @default("HR") // HR, IT, Admin, Payroll, Finance, Other
+  priority       String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status         String    @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  raisedById     String
+  raisedBy       Employee  @relation("TicketRaisedBy", fields: [raisedById], references: [id], onDelete: Cascade)
+  assignedToName String?
+  resolvedAt     DateTime?
+  resolution     String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Travel Requests
+// ─────────────────────────────────────
+
+model TravelRequest {
+  id             String    @id @default(cuid())
+  employeeId     String
+  employee       Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  destination    String
+  purpose        String?
+  startDate      DateTime
+  endDate        DateTime
+  estimatedCost  Float?
+  advance        Float     @default(0)
+  status         String    @default("PENDING") // PENDING, APPROVED, REJECTED, COMPLETED
+  approvedBy     String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Wellness
+// ─────────────────────────────────────
+
+model WellnessProgram {
+  id             String    @id @default(cuid())
+  name           String
+  type           String    @default("Fitness") // Fitness, Mental Health, Health, Nutrition, Other
+  description    String?
+  schedule       String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  status         String    @default("UPCOMING") // UPCOMING, ACTIVE, COMPLETED, CANCELLED
+  participants   Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Social Feed
+// ─────────────────────────────────────
+
+model SocialPost {
+  id             String    @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  authorId       String?
+  author         Employee? @relation(fields: [authorId], references: [id])
+  authorName     String
+  content        String
+  type           String    @default("post") // post, announcement, achievement, welcome, celebration
+  likes          Int       @default(0)
+  createdAt      DateTime  @default(now())
+}
+
+// ─────────────────────────────────────
+// Surveys
+// ─────────────────────────────────────
+
+model Survey {
+  id             String    @id @default(cuid())
+  title          String
+  description    String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  anonymous      Boolean   @default(true)
+  status         String    @default("DRAFT") // DRAFT, ACTIVE, COMPLETED, ARCHIVED
+  deadline       DateTime?
+  totalTargeted  Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  responses      SurveyResponse[]
+}
+
+model SurveyResponse {
+  id         String   @id @default(cuid())
+  surveyId   String
+  survey     Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  employeeId String?
+  answers    String   // JSON
+  createdAt  DateTime @default(now())
+}
+
+// ─────────────────────────────────────
+// Expenses
+// ─────────────────────────────────────
+
+model Expense {
+  id             String    @id @default(cuid())
+  employeeId     String
+  employee       Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category       String    // Travel, Meals, Software, Equipment, Other
+  amount         Float
+  description    String?
+  receipt        Boolean   @default(false)
+  status         String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  approvedBy     String?
+  approvedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Announcements
+// ─────────────────────────────────────
+
+model Announcement {
+  id             String    @id @default(cuid())
+  title          String
+  content        String
+  category       String    @default("General") // General, Policy, Event, Holiday, Achievement, Alert
+  priority       String    @default("NORMAL") // LOW, NORMAL, HIGH, URGENT
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  authorId       String?
+  authorName     String
+  isPinned       Boolean   @default(false)
+  expiresAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────
+// Gamification
+// ─────────────────────────────────────
+
+model BadgeType {
+  id             String    @id @default(cuid())
+  name           String
+  icon           String
+  description    String?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  xpReward       Int       @default(0)
+  awards         BadgeAward[]
+  createdAt      DateTime  @default(now())
+}
+
+model BadgeAward {
+  id          String    @id @default(cuid())
+  badgeTypeId String
+  badgeType   BadgeType @relation(fields: [badgeTypeId], references: [id], onDelete: Cascade)
+  employeeId  String
+  employee    Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+}
+
+model XpTransaction {
+  id          String   @id @default(cuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  amount      Int
+  action      String
+  description String?
+  createdAt   DateTime @default(now())
+}
+
+model EmployeeLevel {
+  id             String       @id @default(cuid())
+  employeeId     String       @unique
+  employee       Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  level          Int          @default(1)
+  xp             Int          @default(0)
+  streak         Int          @default(0)
+  rank           Int?
+  updatedAt      DateTime     @updatedAt
 }

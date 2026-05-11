@@ -1,31 +1,120 @@
 import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { getOrgId } from '@/lib/org';
+
 export async function GET() {
-  return NextResponse.json({
-    headcount: { total: 10, active: 9, probation: 1, onNotice: 0 },
-    departmentBreakdown: [
-      { department: 'Engineering', count: 4, percentage: 40 },
-      { department: 'HR', count: 2, percentage: 20 },
-      { department: 'Design', count: 1, percentage: 10 },
-      { department: 'Marketing', count: 1, percentage: 10 },
-      { department: 'Finance', count: 1, percentage: 10 },
-      { department: 'Operations', count: 1, percentage: 10 },
-    ],
-    genderRatio: { male: 6, female: 4 },
-    ageDistribution: [
-      { range: '21-25', count: 2 }, { range: '26-30', count: 4 },
-      { range: '31-35', count: 3 }, { range: '36-40', count: 1 },
-    ],
-    attrition: { current: 8.5, lastYear: 12.0, industry: 15.0 },
-    hiringTrend: [
-      { month: 'Oct', hires: 2, exits: 0 }, { month: 'Nov', hires: 1, exits: 0 },
-      { month: 'Dec', hires: 0, exits: 1 }, { month: 'Jan', hires: 3, exits: 0 },
-      { month: 'Feb', hires: 1, exits: 0 }, { month: 'Mar', hires: 2, exits: 1 },
-      { month: 'Apr', hires: 2, exits: 0 },
-    ],
-    leaveUtilization: { cl: 45, sl: 28, el: 22, totalDaysTaken: 42, avgPerEmployee: 4.2 },
-    payrollSummary: { totalGross: 4850000, totalNet: 3620000, totalDeductions: 1230000, avgSalary: 485000 },
-    attendanceRate: { thisMonth: 92, lastMonth: 94, thisWeek: 90 },
-    diversityIndex: 0.78,
-    engagementScore: 4.1,
-  });
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ headcount: { total: 0, active: 0, probation: 0, onNotice: 0 } });
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    const [employees, deptGroups, attendance, lastMonthAttendance, payrollRuns, leaveTransactions] = await Promise.all([
+      prisma.employee.findMany({
+        where: { organizationId: orgId },
+        select: {
+          employmentStatus: true, gender: true, dateOfBirth: true,
+          dateOfJoining: true, departmentId: true,
+          department: { select: { name: true } },
+        },
+      }),
+      prisma.employee.groupBy({
+        by: ['departmentId'],
+        where: { organizationId: orgId, employmentStatus: { in: ['ACTIVE', 'PROBATION'] } },
+        _count: { id: true },
+      }),
+      prisma.attendanceRecord.findMany({
+        where: { employee: { organizationId: orgId }, date: { gte: startOfMonth } },
+        select: { status: true },
+      }),
+      prisma.attendanceRecord.findMany({
+        where: { employee: { organizationId: orgId }, date: { gte: startOfLastMonth, lte: endOfLastMonth } },
+        select: { status: true },
+      }),
+      prisma.payrollRun.findMany({
+        where: { organizationId: orgId },
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        include: {
+          entries: { select: { grossPay: true, netPay: true, totalDeductions: true } },
+        },
+      }),
+      prisma.leaveTransaction.findMany({
+        where: { employee: { organizationId: orgId }, status: 'APPROVED' },
+        select: { days: true, leaveType: { select: { name: true } } },
+      }),
+    ]);
+
+    const active = employees.filter(e => e.employmentStatus === 'ACTIVE').length;
+    const probation = employees.filter(e => e.employmentStatus === 'PROBATION').length;
+    const onNotice = employees.filter(e => e.employmentStatus === 'NOTICE').length;
+    const exited = employees.filter(e => e.employmentStatus === 'SEPARATED').length;
+
+    const genderMap: Record<string, number> = {};
+    const ageMap: Record<string, number> = { '21-25': 0, '26-30': 0, '31-35': 0, '36-40': 0, '40+': 0 };
+    for (const e of employees) {
+      if (e.gender) genderMap[e.gender] = (genderMap[e.gender] || 0) + 1;
+      if (e.dateOfBirth) {
+        const age = Math.floor((now.getTime() - new Date(e.dateOfBirth).getTime()) / (365.25 * 24 * 3600 * 1000));
+        if (age <= 25) ageMap['21-25']++;
+        else if (age <= 30) ageMap['26-30']++;
+        else if (age <= 35) ageMap['31-35']++;
+        else if (age <= 40) ageMap['36-40']++;
+        else ageMap['40+']++;
+      }
+    }
+
+    const totalActive = active + probation;
+    const deptNames = await prisma.department.findMany({
+      where: { organizationId: orgId },
+      select: { id: true, name: true },
+    });
+    const deptNameMap = Object.fromEntries(deptNames.map(d => [d.id, d.name]));
+
+    const departmentBreakdown = deptGroups.map(g => ({
+      department: deptNameMap[g.departmentId || ''] || 'Unassigned',
+      count: g._count.id,
+      percentage: totalActive > 0 ? Math.round((g._count.id / totalActive) * 100) : 0,
+    }));
+
+    const presentThis = attendance.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+    const presentLast = lastMonthAttendance.filter(a => a.status === 'PRESENT' || a.status === 'LATE').length;
+    const attendanceRate = {
+      thisMonth: attendance.length > 0 ? Math.round((presentThis / attendance.length) * 100) : 0,
+      lastMonth: lastMonthAttendance.length > 0 ? Math.round((presentLast / lastMonthAttendance.length) * 100) : 0,
+    };
+
+    const latestRun = payrollRuns[0];
+    const payrollSummary = latestRun ? {
+      totalGross: latestRun.entries.reduce((s, e) => s + (e.grossPay || 0), 0),
+      totalNet: latestRun.entries.reduce((s, e) => s + (e.netPay || 0), 0),
+      totalDeductions: latestRun.entries.reduce((s, e) => s + (e.totalDeductions || 0), 0),
+      avgSalary: latestRun.entries.length > 0
+        ? Math.round(latestRun.entries.reduce((s, e) => s + (e.grossPay || 0), 0) / latestRun.entries.length)
+        : 0,
+    } : { totalGross: 0, totalNet: 0, totalDeductions: 0, avgSalary: 0 };
+
+    const leaveTotalDays = leaveTransactions.reduce((s, t) => s + (t.days || 0), 0);
+
+    return NextResponse.json({
+      headcount: { total: employees.length, active, probation, onNotice, exited },
+      departmentBreakdown,
+      genderRatio: genderMap,
+      ageDistribution: Object.entries(ageMap).map(([range, count]) => ({ range, count })),
+      attrition: {
+        current: employees.length > 0 ? Math.round((exited / employees.length) * 100 * 10) / 10 : 0,
+      },
+      leaveUtilization: {
+        totalDaysTaken: leaveTotalDays,
+        avgPerEmployee: totalActive > 0 ? Math.round((leaveTotalDays / totalActive) * 10) / 10 : 0,
+      },
+      payrollSummary,
+      attendanceRate,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

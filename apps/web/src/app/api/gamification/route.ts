@@ -1,29 +1,113 @@
 import { NextResponse } from 'next/server';
-const gamification = {
-  user: { level: 5, title: 'Rising Star', xp: 2450, xpToNext: 3000, streak: 7, totalBadges: 12, rank: 3, totalUsers: 10 },
-  badges: [
-    { id: '1', name: 'First Login', icon: '🔑', earned: true, earnedAt: '2026-01-15' },
-    { id: '2', name: 'Profile Complete', icon: '✅', earned: true, earnedAt: '2026-01-16' },
-    { id: '3', name: 'Early Bird', icon: '🌅', earned: true, earnedAt: '2026-02-01', description: 'Clocked in before 9 AM for 5 consecutive days' },
-    { id: '4', name: 'Team Player', icon: '🤝', earned: true, earnedAt: '2026-02-15', description: 'Gave recognition to 5 colleagues' },
-    { id: '5', name: 'Marathon Runner', icon: '🏃', earned: true, earnedAt: '2026-03-01', description: '30-day attendance streak' },
-    { id: '6', name: 'Quick Learner', icon: '📚', earned: true, earnedAt: '2026-03-15', description: 'Completed 3 training courses' },
-    { id: '7', name: 'Mentor', icon: '🎓', earned: false, description: 'Mentor a new joiner through onboarding' },
-    { id: '8', name: 'Innovation Star', icon: '💡', earned: false, description: 'Submit 5 improvement suggestions' },
-  ],
-  leaderboard: [
-    { rank: 1, name: 'Sneha Reddy', code: 'EMP-0002', xp: 3200, level: 6, streak: 12 },
-    { rank: 2, name: 'Amit Kumar', code: 'EMP-0003', xp: 2800, level: 5, streak: 8 },
-    { rank: 3, name: 'Arjun Nair', code: 'EMP-0001', xp: 2450, level: 5, streak: 7 },
-    { rank: 4, name: 'Priya Patel', code: 'EMP-0004', xp: 2100, level: 4, streak: 5 },
-    { rank: 5, name: 'Rohit Mehta', code: 'EMP-0007', xp: 1800, level: 4, streak: 3 },
-  ],
-  recentActivity: [
-    { action: 'Earned badge: Quick Learner', xp: 100, date: '2026-03-15' },
-    { action: 'Completed training course', xp: 50, date: '2026-03-14' },
-    { action: 'Gave recognition to colleague', xp: 20, date: '2026-03-12' },
-    { action: '7-day attendance streak!', xp: 70, date: '2026-03-10' },
-  ],
-};
-export async function GET() { return NextResponse.json(gamification); }
-export async function POST() { return NextResponse.json({ success: true }); }
+import prisma from '@/lib/prisma';
+import { getOrgId } from '@/lib/org';
+
+export async function GET(request: Request) {
+  try {
+    const orgId = await getOrgId();
+    const { searchParams } = new URL(request.url);
+    const employeeId = searchParams.get('employeeId');
+
+    if (!orgId) return NextResponse.json({ leaderboard: [], badges: [], user: null, recentActivity: [] });
+
+    const [levels, badgeAwards, xpTransactions, badgeTypes] = await Promise.all([
+      prisma.employeeLevel.findMany({
+        where: { organizationId: orgId },
+        include: { employee: { select: { firstName: true, lastName: true, employeeCode: true } } },
+        orderBy: { xp: 'desc' },
+        take: 20,
+      }),
+      employeeId ? prisma.badgeAward.findMany({
+        where: { employeeId },
+        include: { badgeType: true },
+        orderBy: { createdAt: 'desc' },
+      }) : Promise.resolve([]),
+      employeeId ? prisma.xpTransaction.findMany({
+        where: { employeeId },
+        orderBy: { createdAt: 'desc' },
+        take: 20,
+      }) : Promise.resolve([]),
+      prisma.badgeType.findMany({
+        where: { organizationId: orgId },
+        orderBy: { name: 'asc' },
+      }),
+    ]);
+
+    const leaderboard = levels.map((l, i) => ({
+      rank: i + 1,
+      employeeId: l.employeeId,
+      name: `${l.employee.firstName} ${l.employee.lastName}`,
+      code: l.employee.employeeCode,
+      xp: l.xp,
+      level: l.level,
+      streak: l.streak,
+    }));
+
+    const userLevel = employeeId ? levels.find(l => l.employeeId === employeeId) : null;
+    const earnedBadgeIds = new Set(badgeAwards.map(a => a.badgeTypeId));
+
+    const badges = badgeTypes.map(bt => ({
+      id: bt.id,
+      name: bt.name,
+      icon: bt.icon,
+      description: bt.description,
+      xpReward: bt.xpReward,
+      earned: earnedBadgeIds.has(bt.id),
+      earnedAt: badgeAwards.find(a => a.badgeTypeId === bt.id)?.createdAt || null,
+    }));
+
+    return NextResponse.json({
+      leaderboard,
+      badges,
+      user: userLevel ? {
+        employeeId: userLevel.employeeId,
+        level: userLevel.level,
+        xp: userLevel.xp,
+        streak: userLevel.streak,
+        rank: leaderboard.findIndex(l => l.employeeId === employeeId) + 1,
+        totalBadges: badgeAwards.length,
+      } : null,
+      recentActivity: xpTransactions.map(t => ({
+        action: t.description || t.action,
+        xp: t.amount,
+        date: t.createdAt,
+      })),
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const orgId = await getOrgId();
+    if (!orgId) return NextResponse.json({ error: 'No organization' }, { status: 400 });
+    const body = await request.json();
+
+    if (body.action === 'award_xp') {
+      const [tx, level] = await Promise.all([
+        prisma.xpTransaction.create({
+          data: { employeeId: body.employeeId, amount: body.amount, action: body.action, description: body.description },
+        }),
+        prisma.employeeLevel.upsert({
+          where: { employeeId: body.employeeId },
+          create: { employeeId: body.employeeId, organizationId: orgId, xp: body.amount, level: 1, streak: 0 },
+          update: { xp: { increment: body.amount } },
+        }),
+      ]);
+      return NextResponse.json({ transaction: tx, level });
+    }
+
+    if (body.action === 'award_badge') {
+      const award = await prisma.badgeAward.create({
+        data: { employeeId: body.employeeId, badgeTypeId: body.badgeTypeId },
+        include: { badgeType: true },
+      });
+      return NextResponse.json(award, { status: 201 });
+    }
+
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
